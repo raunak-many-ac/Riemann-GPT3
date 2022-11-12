@@ -6,15 +6,16 @@ def putInJsonFile(data: dict, filePath: str = "./dataset.json"):
     jsonData = json.dumps(data, indent=4)
     output_file.write(jsonData)
 
-def complexNumberToString():
-    pass
+def complexNumberToString(complexNumber):
+    return f"{complexNumber.real} {'+' if complexNumber.imag >= 0 else '-'} i{abs(complexNumber.imag)}"
 
 def stringToComplexNumber():
     pass
-def promptCompletionFormat(key, value):
-    output = f"{value.real} {'+' if value.imag >= 0 else '-'} i{abs(value.imag)}"
 
-    zetaValue = f"{key[0].real} {'+' if key[0].imag >= 0 else '-'} i{abs(key[0].imag)}"
+def promptCompletionFormat(key, value):
+    output = complexNumberToString(value)
+
+    zetaValue = complexNumberToString(key[0])
     low = key[1]
     high = key[2]
 
