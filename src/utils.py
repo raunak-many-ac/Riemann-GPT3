@@ -1,4 +1,8 @@
 import json
+import mpmath
+import random
+
+from constants import Constants
 
 def putInJsonFile(data: dict, filePath: str = "./dataset.json"):
     output_file = open(filePath, "w")
@@ -6,11 +10,17 @@ def putInJsonFile(data: dict, filePath: str = "./dataset.json"):
     jsonData = json.dumps(data, indent=4)
     output_file.write(jsonData)
 
-def complexNumberToString(complexNumber):
+def complexNumberToString(complexNumber) -> str:
+    if isinstance(complexNumber, str):
+        return complexNumber
+
     return f"{complexNumber.real} {'+' if complexNumber.imag >= 0 else '-'} i{abs(complexNumber.imag)}"
 
-def stringToComplexNumber():
-    pass
+def stringToComplexNumber(stringNumber) -> mpmath.mpc:
+    splittedNumbers = stringNumber.split(" ")
+    realPart = splittedNumbers[0]
+    imaginaryPart = splittedNumbers[1] + splittedNumbers[2][1:]
+    return mpmath.mpc(realPart, imaginaryPart)
 
 def promptCompletionFormat(key, value):
     output = complexNumberToString(value)
@@ -29,4 +39,21 @@ def convertToFeedablePrompt(data: dict):
         promptDict = promptCompletionFormat(input, data[input])
         feedablePromptDict.append(promptDict)
     return feedablePromptDict
-        
+
+def mergeTwoJsonsAndShuffle(jsonPaths: list, mergedJsonPath: str = "./dataset.json"):
+    mergedJsons: list = []
+
+    for jsonPath in jsonPaths:
+        jsonFile = open(jsonPath)
+        jsonList: list = json.load(jsonFile)
+        mergedJsons.extend(jsonList)
+    random.shuffle(mergedJsons)
+
+    output_file = open(mergedJsonPath, "w")
+    jsonData = json.dumps(mergedJsons, indent=4)
+    output_file.write(jsonData)
+
+if __name__ == "__main__":
+    jsonPaths = [Constants.pathToInfeasibleZetaZeroes, Constants.pathToCriticalZeroes]
+    mergeTwoJsonsAndShuffle(jsonPaths)
+

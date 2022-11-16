@@ -1,11 +1,19 @@
 {
   "configurations": [
     {
-      "name": "Python: Run",
+      "name": "generate: Run",
       "type": "python",
       "request": "launch",
       "program": "src/generateDataset.py",
     //   "console": "externalTerminal",
+    },
+    {
+      "name": "Utils: Run",
+      "type": "python",
+      "request": "launch",
+      "program": "src/utils.py",
+    //   "console": "externalTerminal",
     }
+
   ]
 }

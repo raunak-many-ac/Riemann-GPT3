@@ -6,12 +6,11 @@
 
 import mpmath
 import random
-import numpy as np
-
+from constants import Constants
 import utils
 
-CREATION_COUNT = 5
-noOfZeroesOnCriticalAxisToGenerate = 5000
+CREATION_COUNT = 20000
+noOfZeroesOnCriticalAxisToGenerate = 1000
 INFINITE = 999999
 NEGATIVE_INFINITE = -INFINITE - 1
 # mpmath.mp.prec = 53
@@ -61,15 +60,27 @@ def generateTheCriticalLineZeroes(noOfZeroesOnCriticalAxisToGenerate):
     # criticalLineZeroes needs to be put in a criticalLineZeroes.json
     return dictionaryOfZetaZeroes
 
-def generateTrivialZeroes():
-    pass
+def generateInfeasibleZetaZeroes(noOfZeroesOnCriticalAxisToGenerate):
+    noOfZeroesOnCriticalAxis = noOfZeroesOnCriticalAxisToGenerate
+    
+    dictionaryOfZetaZeroes = {}
+    while len(dictionaryOfZetaZeroes) < noOfZeroesOnCriticalAxis:
+        prompts: dict = {}
+        low: float = random.randrange(start=2, stop=1000)
+        high: float = random.randrange(start=2, stop=1000)
+        zetaValue = mpmath.mpc(0, 0)
+        prompts[(zetaValue, low, high)] = "No Solution"
+        dictionaryOfZetaZeroes.update(prompts)
+    
+    return dictionaryOfZetaZeroes
+    
 
 def generateRandomZetaFunctionValuesWithRanges(CREATION_COUNT):
     dictionaryOfZetaZeroes = {}
     for i in range(0, CREATION_COUNT):
         # generate random complex number number
-        random_real = random.randrange(start=-100, stop=100)
-        random_imaginary = random.randrange(start=NEGATIVE_INFINITE, stop=INFINITE)
+        random_real = random.randrange(start=-2, stop=2) * random.random()
+        random_imaginary = random.randrange(start=NEGATIVE_INFINITE, stop=INFINITE) * random.random()
         random_input = random_real + (random_imaginary*1j)
 
         # calculate its zeta function value
@@ -79,19 +90,11 @@ def generateRandomZetaFunctionValuesWithRanges(CREATION_COUNT):
         dictionaryOfZetaZeroes.update(prompts)
     return dictionaryOfZetaZeroes
 
-# x = mpmath.zeta(-2+0j)
-z: mpmath.mpc = mpmath.zetazero(1)
-# x = np.fl
-print(z)
-y: mpmath.mpf = z.imag
-z = mpmath.zeta(2+3j)
+# dictionaryOfZetaZeroes: dict = generateTheCriticalLineZeroes(noOfZeroesOnCriticalAxisToGenerate)
+# utils.putInJsonFile(dictionaryOfZetaZeroes, "./criticalZeroes.json")
 
-# parseTheCriticalLineZeroes()
-x = np.format_float_scientific(y)
-print(x)
-
-dictionaryOfZetaZeroes: dict = generateTheCriticalLineZeroes(noOfZeroesOnCriticalAxisToGenerate)
-utils.putInJsonFile(dictionaryOfZetaZeroes)
+# dictionaryOfZetaZeroes = generateInfeasibleZetaZeroes(noOfZeroesOnCriticalAxisToGenerate)
+# utils.putInJsonFile(dictionaryOfZetaZeroes, Constants.pathToInfeasibleZetaZeroes)
 
 dictionaryOfZetaZeroes = generateRandomZetaFunctionValuesWithRanges(CREATION_COUNT)
-utils.putInJsonFile(dictionaryOfZetaZeroes)
+utils.putInJsonFile(dictionaryOfZetaZeroes, Constants.pathToGeneralValues)

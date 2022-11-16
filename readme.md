@@ -7,6 +7,11 @@ this project uses following libraries:
 
 
 #### to train
-openai api fine_tunes.create -t dataset.json -m davinci --suffix "zeta testing"
+openai api fine_tunes.create -t dataset_prepared.jsonl -m davinci --suffix "zeta testing"
 
-ft-1pvgwy90kSRkDl2pSrgdkYjg
+
+#### to use openai's json --> jsonl tool for prompt
+openai tools fine_tunes.prepare_data -f "dataset.json"
+
+#### to clist previously fine tuned models
+openai api fine_tunes.list
