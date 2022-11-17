@@ -26,7 +26,7 @@ By looking at graph of `ζ(a+ix)` where `a` is arbitrary constant we can find ou
 We know $\zeta(-2+i0) = 0$ and $\zeta(-0.5+i14.134725..) = 0$
 
 So for $\eta(0, -2.5, 10))$: - 
-$(-2+i0)$ and $(-0.5+i14.134725...)$ both are valid answers
+$(-2+i0)$ and $(-0.5+i14.134725...)$ both are valid outputs
 
 Because we can't give any predict strict range in which the Riemann Zeta value exists specially in critical region.
 

@@ -14,7 +14,8 @@ noOfZeroesOnCriticalAxisToGenerate = 1000
 INFINITE = 999999
 NEGATIVE_INFINITE = -INFINITE - 1
 # mpmath.mp.prec = 53
-mpmath.mp.pretty = True
+mpmath.mp.dps = 30 # total 30 digits of number it will be
+# mpmath.mp.pretty = True
 
 
 # This function takes a dictionary input where every entry is like: 

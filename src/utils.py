@@ -14,7 +14,13 @@ def complexNumberToString(complexNumber) -> str:
     if isinstance(complexNumber, str):
         return complexNumber
 
-    return f"{complexNumber.real} {'+' if complexNumber.imag >= 0 else '-'} i{abs(complexNumber.imag)}"
+    realPart = complexNumber.real
+    realPartAsString = f'{realPart}'
+
+    imagPart = complexNumber.imag
+    imagPartAsString = f'{imagPart}'
+
+    return f"{realPartAsString} {'+' if imagPart >= 0 else '-'} i{imagPartAsString}"
 
 def stringToComplexNumber(stringNumber) -> mpmath.mpc:
     splittedNumbers = stringNumber.split(" ")
@@ -24,8 +30,8 @@ def stringToComplexNumber(stringNumber) -> mpmath.mpc:
 
 def promptCompletionFormat(key, value):
     output = complexNumberToString(value)
-
     zetaValue = complexNumberToString(key[0])
+
     low = key[1]
     high = key[2]
 

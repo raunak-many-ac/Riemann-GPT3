@@ -5,7 +5,7 @@
       "type": "python",
       "request": "launch",
       "program": "src/generateDataset.py",
-    //   "console": "externalTerminal",
+      // "console": "externalTerminal"
     },
     {
       "name": "Utils: Run",
