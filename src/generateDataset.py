@@ -21,19 +21,19 @@ mpmath.mp.dps = 30 # total 30 digits of number it will be
 # Now this function should:
 #     - generate bounded range for input value (exclusion of ranges)
 #     - close range as well
-def generateInputPrompts(zetaValue: mpmath.mpc, inputValue: mpmath.mpc, alsoGenerateOutOfBoundaryNoSolution: bool = False) -> dict:
+def generateInputPrompts(outputValue: mpmath.mpc, inputValue: mpmath.mpc, alsoGenerateOutOfBoundaryNoSolution: bool = False) -> dict:
     real: mpmath.mpf = inputValue.real
     # floorReal = mpmath.floor(real) if mpmath.floor(real) != 0 else mpmath.
 
     prompts = {}
 
-    randomNumber: float = random.randrange(start=0, stop=1000) * random.random()
+    randomNumber: float = abs(random.randrange(start=-2, stop=0)) * random.random()
     low = real - randomNumber
 
-    randomNumber = random.randrange(start=0, stop=1000) * random.random()
+    randomNumber = abs(random.randrange(start=-2, stop=0)) * random.random()
     high = real + randomNumber
 
-    prompts[(zetaValue, low, high)] = inputValue
+    prompts[(outputValue, low, high)] = inputValue
 
     # if alsoGenerateOutOfBoundaryNoSolution is True:
     #     prompts[(zetaValue, real - random.random(), real)] = "No Solution"
@@ -53,7 +53,7 @@ def generateTheCriticalLineZeroes(noOfZeroesOnCriticalAxisToGenerate):
 
     dictionaryOfZetaZeroes = {}
     for zetazero in criticalLineZeroes:
-        prompts: dict = generateInputPrompts(zetaValue=mpmath.mpmathify(0+0j), inputValue=zetazero)
+        prompts: dict = generateInputPrompts(outputValue=mpmath.mpmathify(0+0j), inputValue=zetazero)
         dictionaryOfZetaZeroes.update(prompts)
 
     # criticalLineZeroes needs to be put in a criticalLineZeroes.json
@@ -84,8 +84,9 @@ def generateRandomZetaFunctionValuesWithRanges(CREATION_COUNT):
 
         # calculate its zeta function value
         zetaValue = mpmath.zeta(random_input)
+        mathifiedZeta = mpmath.mpmathify(random_input)
         
-        prompts: dict = generateInputPrompts(zetaValue=mpmath.mpmathify(random_input), inputValue=zetaValue)
+        prompts: dict = generateInputPrompts(outputValue=mpmath.mpmathify(zetaValue), inputValue=mpmath.mpmathify(random_input))
         dictionaryOfZetaZeroes.update(prompts)
     return dictionaryOfZetaZeroes
 

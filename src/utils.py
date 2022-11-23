@@ -18,7 +18,7 @@ def complexNumberToString(complexNumber) -> str:
     realPartAsString = f'{realPart}'
 
     imagPart = complexNumber.imag
-    imagPartAsString = f'{imagPart}'
+    imagPartAsString = f'{abs(imagPart)}'
 
     return f"{realPartAsString} {'+' if imagPart >= 0 else '-'} i{imagPartAsString}"
 
