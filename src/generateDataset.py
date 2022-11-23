@@ -11,8 +11,6 @@ import utils
 
 CREATION_COUNT = 20000
 noOfZeroesOnCriticalAxisToGenerate = 1000
-INFINITE = 999999
-NEGATIVE_INFINITE = -INFINITE - 1
 # mpmath.mp.prec = 53
 mpmath.mp.dps = 30 # total 30 digits of number it will be
 # mpmath.mp.pretty = True
@@ -81,7 +79,7 @@ def generateRandomZetaFunctionValuesWithRanges(CREATION_COUNT):
     for i in range(0, CREATION_COUNT):
         # generate random complex number number
         random_real = random.randrange(start=-2, stop=2) * random.random()
-        random_imaginary = random.randrange(start=NEGATIVE_INFINITE, stop=INFINITE) * random.random()
+        random_imaginary = random.randrange(start=Constants.NEGATIVE_INFINITE, stop=Constants.INFINITE) * random.random()
         random_input = random_real + (random_imaginary*1j)
 
         # calculate its zeta function value

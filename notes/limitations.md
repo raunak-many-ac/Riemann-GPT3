@@ -36,3 +36,4 @@ So, for any Riemann Zeta Zero on critical axis we can't give any strict range wi
 Even though if there aren't any Riemann Zeta zeroes in [0,0.5) or (0.5, 1] we still have a lot of them on critical axis (real = 0.5).
 
 
+8VU4A7-E83WT7U5TW

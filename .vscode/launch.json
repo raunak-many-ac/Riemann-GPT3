@@ -13,7 +13,14 @@
       "request": "launch",
       "program": "src/utils.py",
     //   "console": "externalTerminal",
-    }
+    },
+    {
+      "name": "no solution: Run",
+      "type": "python",
+      "request": "launch",
+      "program": "src/noSolutionGenerator.py",
+      // "console": "externalTerminal"
+    },
 
   ]
 }
