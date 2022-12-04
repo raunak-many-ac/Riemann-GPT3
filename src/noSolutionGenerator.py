@@ -1,3 +1,5 @@
+# Note: - It is an incomplete file
+# Generate prompts that have "No Solution" in hypothesized Inverse of Riemann Zeta Function
 import random
 import numpy
 import mpmath
@@ -6,7 +8,7 @@ import matplotlib.pyplot as plotter
 from constants import Constants
 
 def generateNoSolutionDataPoints(dataPoints):
-    
+
     pass
 
 def generateNoSolutionFor(fixedImag):

@@ -84,17 +84,16 @@ def generateRandomZetaFunctionValuesWithRanges(CREATION_COUNT):
 
         # calculate its zeta function value
         zetaValue = mpmath.zeta(random_input)
-        mathifiedZeta = mpmath.mpmathify(random_input)
         
         prompts: dict = generateInputPrompts(outputValue=mpmath.mpmathify(zetaValue), inputValue=mpmath.mpmathify(random_input))
         dictionaryOfZetaZeroes.update(prompts)
     return dictionaryOfZetaZeroes
 
-# dictionaryOfZetaZeroes: dict = generateTheCriticalLineZeroes(noOfZeroesOnCriticalAxisToGenerate)
-# utils.putInJsonFile(dictionaryOfZetaZeroes, "./criticalZeroes.json")
+dictionaryOfZetaZeroes: dict = generateTheCriticalLineZeroes(noOfZeroesOnCriticalAxisToGenerate)
+utils.putInJsonFile(dictionaryOfZetaZeroes, "./criticalZeroes.json")
 
-# dictionaryOfZetaZeroes = generateInfeasibleZetaZeroes(noOfZeroesOnCriticalAxisToGenerate)
-# utils.putInJsonFile(dictionaryOfZetaZeroes, Constants.pathToInfeasibleZetaZeroes)
+dictionaryOfZetaZeroes = generateInfeasibleZetaZeroes(noOfZeroesOnCriticalAxisToGenerate)
+utils.putInJsonFile(dictionaryOfZetaZeroes, Constants.pathToInfeasibleZetaZeroes)
 
 dictionaryOfZetaZeroes = generateRandomZetaFunctionValuesWithRanges(CREATION_COUNT)
 utils.putInJsonFile(dictionaryOfZetaZeroes, Constants.pathToGeneralValues)

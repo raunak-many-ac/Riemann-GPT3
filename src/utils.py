@@ -10,19 +10,26 @@ def putInJsonFile(data: dict, filePath: str = "./dataset.json"):
     jsonData = json.dumps(data, indent=4)
     output_file.write(jsonData)
 
-def complexNumberToString(complexNumber) -> str:
+def keepMaxFiveDigitsAfterDecimal(decimalStr):
+    fiveDigitsAfterDecimal = min(len(decimalStr),decimalStr.find(".") + 6)
+    decimalStr = decimalStr[:fiveDigitsAfterDecimal]
+    return decimalStr
+
+def complexNumberToString(complexNumber: mpmath.mpc) -> str:
     if isinstance(complexNumber, str):
         return complexNumber
 
     realPart = complexNumber.real
     realPartAsString = f'{realPart}'
+    realPartAsString = keepMaxFiveDigitsAfterDecimal(realPartAsString)
 
     imagPart = complexNumber.imag
     imagPartAsString = f'{abs(imagPart)}'
+    imagPartAsString = keepMaxFiveDigitsAfterDecimal(imagPartAsString)
 
     return f"{realPartAsString} {'+' if imagPart >= 0 else '-'} i{imagPartAsString}"
 
-def stringToComplexNumber(stringNumber) -> mpmath.mpc:
+def stringToComplexNumber(stringNumber: str) -> mpmath.mpc:
     splittedNumbers = stringNumber.split(" ")
     realPart = splittedNumbers[0]
     imaginaryPart = splittedNumbers[1] + splittedNumbers[2][1:]
@@ -32,8 +39,8 @@ def promptCompletionFormat(key, value):
     output = complexNumberToString(value)
     zetaValue = complexNumberToString(key[0])
 
-    low = key[1]
-    high = key[2]
+    low = keepMaxFiveDigitsAfterDecimal(f"{key[1]}")
+    high = keepMaxFiveDigitsAfterDecimal(f"{key[2]}")
 
     promptDict: dict[str, str] = {"prompt": f"Zetavalue:{zetaValue},low:{low},high:{high}", "completion":output}
     
@@ -60,6 +67,6 @@ def mergeTwoJsonsAndShuffle(jsonPaths: list, mergedJsonPath: str = "./dataset.js
     output_file.write(jsonData)
 
 if __name__ == "__main__":
-    jsonPaths = [Constants.pathToInfeasibleZetaZeroes, Constants.pathToCriticalZeroes]
+    jsonPaths = ["dataset.json", Constants.pathToGeneralValues]
     mergeTwoJsonsAndShuffle(jsonPaths)
 
