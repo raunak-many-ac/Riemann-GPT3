@@ -5,7 +5,7 @@ import os
 API_KEY = os.environ["OPENAI_API_KEY"]
 openai.api_key = API_KEY
 
-prompt = "Zetavalue:-51.36898 - i178.12148,low:-0.56640,high:0.84034 ->"
+prompt = "Zetavalue:0 + i0,low:0.50001,high:1 ->"
 model="davinci:ft-personal:zeta-testing-2022-11-26-15-45-02"
 response = openai.Completion.create(model=model, prompt=prompt)
 

@@ -12,8 +12,6 @@ At the end of the training we will ask the gpt-3 trained model to give output fo
 If model's efficacy is high, value of above outputs will falsify Riemann's Hypothesis
 
 
-#### Used `numpy` for better precision
-
 #### Using `mpmath`
     For calculating zeta function values for given inputs
     For calculating ith zeta zeroes

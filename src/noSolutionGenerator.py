@@ -36,8 +36,6 @@ def generateNoSolutionFor(fixedImag):
     generateNoSolutionDataPoints(dataPoints=dataPoints)
 
 
-
-
 # constReal = random.randrange(start=-2, stop=2) * random.random()
 
 constImag = random.randrange(start=Constants.NEGATIVE_INFINITE, stop=Constants.INFINITE) * random.random()
