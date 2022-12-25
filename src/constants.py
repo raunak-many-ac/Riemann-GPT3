@@ -5,3 +5,7 @@ class Constants:
     pathToGeneralValues = "./generalValues.json"
     INFINITE = 999999
     NEGATIVE_INFINITE = -INFINITE - 1
+
+class ExtractionConstants:
+    choices = "choices"
+    text = "text"
