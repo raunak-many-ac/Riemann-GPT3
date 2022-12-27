@@ -2,7 +2,7 @@ import json
 import mpmath
 import random
 
-from constants import Constants
+from src.constants import Constants
 
 def putInJsonFile(data: dict, filePath: str = "./dataset.json"):
     output_file = open(filePath, "w")

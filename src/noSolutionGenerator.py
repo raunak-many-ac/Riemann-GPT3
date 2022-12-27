@@ -5,7 +5,7 @@ import numpy
 import mpmath
 import matplotlib.pyplot as plotter
 
-from constants import Constants
+from src.constants import Constants
 
 def generateNoSolutionDataPoints(dataPoints):
 

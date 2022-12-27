@@ -1,24 +1,25 @@
 # This file will randomly generate multiple riemann zeta function inputs
 # to test the training efficacy.
-
-from generateDataset import generateRandomZetaFunctionValuesWithRanges, generateTheCriticalLineZeroes
-
-import mpmath
+import mpmath 
 import openai
-from src.constants import ExtractionConstants
+import numpy
+import matplotlib.pyplot as plt
 
-CREATION_COUNT = 1000
-noOfZeroesOnCriticalAxisToGenerate = 50
+from src.constants import ExtractionConstants
+from src.generateDataset import generateRandomZetaFunctionValuesWithRanges, generateTheCriticalLineZeroes
+
+CREATION_COUNT = 1
+noOfZeroesOnCriticalAxisToGenerate = 1
 model="davinci:ft-personal:zeta-testing-2022-11-26-15-45-02"
 
 def getRawCompletion(input: tuple, L: float, R: float):
     prompt = f"Zetavalue:{input},low:{L},high:{R} ->"
     response = openai.Completion.create(model=model, prompt=prompt)
-    return response[ExtractionConstants.choices][ExtractionConstants.text]
+    return response[ExtractionConstants.choices][0][ExtractionConstants.text]
 
 # extract out the value from the completion output, since it may contain some
 # pollution. In the  completion string try to find location of "+ i" then
-# it we can extract the complex number
+# we can extract the complex number
 def extractCompletion(rawCompletion: str):
     imaginaryPartSign = "+" if rawCompletion.find(" - i") == -1 else "-"
     subStringToSearch = f" {imaginaryPartSign} i"
@@ -30,7 +31,7 @@ def extractCompletion(rawCompletion: str):
     firstDigitIndexOfImagPart = lastDigitIndexOfRealPart + 5
     realPartDigits = []
     imagPartDigits = []
-    
+
     while rawCompletion[lastDigitIndexOfRealPart].isdigit() or rawCompletion[lastDigitIndexOfRealPart] == ".":
         realPartDigits.append(rawCompletion[lastDigitIndexOfRealPart])
         lastDigitIndexOfRealPart -= 1
@@ -48,15 +49,27 @@ def extractCompletion(rawCompletion: str):
 def findDiff(val1: mpmath.mpc, val2: mpmath.mpc):
     pass
 
-dictionaryOfZetaZeroes: dict = generateTheCriticalLineZeroes(noOfZeroesOnCriticalAxisToGenerate)
+dictionaryOfZetaZeroes: dict[tuple[mpmath.mpc, float, float], mpmath.mpc] = generateTheCriticalLineZeroes(noOfZeroesOnCriticalAxisToGenerate)
 
 dictionaryOfZetaZeroes.update(generateRandomZetaFunctionValuesWithRanges(CREATION_COUNT))
 
-inferenceDiffs = []
-for key, value in dictionaryOfZetaZeroes:
+inferenceDiffs: list[mpmath.mpc] = []
+actualValues: list[mpmath.mpc] = []
+inferedValues: list[mpmath.mpc] = []
+for key in dictionaryOfZetaZeroes.keys():
+    output, L, R = key
+    value = dictionaryOfZetaZeroes[key]
     response = getRawCompletion(key[0], key[1], key[2])
     response = extractCompletion(response)
-    inferenceDiffs.append(findDiff(value, response))
+    # inferenceDiffs.append(findDiff(value, response))
+    actualValues.append(value)
+    inferedValues.append(response)
+
+xpoints = numpy.array(actualValues)
+ypoints = numpy.array(inferedValues)
+
+plt.plot(xpoints, ypoints)
+plt.show()
 
 # put inferrence diffs in a json file
 

@@ -21,6 +21,20 @@
       "program": "src/noSolutionGenerator.py",
       // "console": "externalTerminal"
     },
+    {
+      "name": "Test: inference",
+      "type": "python",
+      "request": "launch",
+      "program": "test/inference_test.py",
+      // "console": "externalTerminal"
+    },
+    {
+      "name": "Test: pattern",
+      "type": "python",
+      "request": "launch",
+      "program": "test/testCompletionPattern.py",
+      // "console": "externalTerminal"
+    },
 
   ]
 }

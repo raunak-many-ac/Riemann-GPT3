@@ -6,8 +6,8 @@
 
 import mpmath
 import random
-from constants import Constants
-import utils
+from src.constants import Constants
+import src.utils as utils
 
 CREATION_COUNT = 20000
 noOfZeroesOnCriticalAxisToGenerate = 1000
@@ -21,7 +21,7 @@ mpmath.mp.dps = 30 # total 30 digits of number it will be
 # Now this function should:
 #     - generate bounded range for input value (exclusion of ranges)
 #     - close range as well
-def generateInputPrompts(outputValue: mpmath.mpc, inputValue: mpmath.mpc, alsoGenerateOutOfBoundaryNoSolution: bool = False) -> dict:
+def generateInputPrompts(outputValue: mpmath.mpc, inputValue: mpmath.mpc, alsoGenerateOutOfBoundaryNoSolution: bool = False) -> dict[tuple[mpmath.mpc, float, float], mpmath.mpc]:
     real: mpmath.mpf = inputValue.real
     # floorReal = mpmath.floor(real) if mpmath.floor(real) != 0 else mpmath.
 
@@ -41,8 +41,8 @@ def generateInputPrompts(outputValue: mpmath.mpc, inputValue: mpmath.mpc, alsoGe
         
     return prompts
 
-def generateTheCriticalLineZeroes(noOfZeroesOnCriticalAxisToGenerate):
-    criticalLineZeroes = []
+def generateTheCriticalLineZeroes(noOfZeroesOnCriticalAxisToGenerate) -> dict[tuple[mpmath.mpc, float, float], mpmath.mpc]:
+    criticalLineZeroes: list[mpmath.mpc] = []
     noOfZeroesOnCriticalAxis = noOfZeroesOnCriticalAxisToGenerate
     i = 1
     while len(criticalLineZeroes) < noOfZeroesOnCriticalAxis:
@@ -74,7 +74,7 @@ def generateInfeasibleZetaZeroes(noOfZeroesOnCriticalAxisToGenerate):
     return dictionaryOfZetaZeroes
     
 
-def generateRandomZetaFunctionValuesWithRanges(CREATION_COUNT):
+def generateRandomZetaFunctionValuesWithRanges(CREATION_COUNT) -> dict[tuple[mpmath.mpc, float, float], mpmath.mpc]:
     dictionaryOfZetaZeroes = {}
     for i in range(0, CREATION_COUNT):
         # generate random complex number number
@@ -89,11 +89,12 @@ def generateRandomZetaFunctionValuesWithRanges(CREATION_COUNT):
         dictionaryOfZetaZeroes.update(prompts)
     return dictionaryOfZetaZeroes
 
-dictionaryOfZetaZeroes: dict = generateTheCriticalLineZeroes(noOfZeroesOnCriticalAxisToGenerate)
-utils.putInJsonFile(dictionaryOfZetaZeroes, "./criticalZeroes.json")
+if __name__ == "__main__":
+    dictionaryOfZetaZeroes: dict = generateTheCriticalLineZeroes(noOfZeroesOnCriticalAxisToGenerate)
+    utils.putInJsonFile(dictionaryOfZetaZeroes, "./criticalZeroes.json")
 
-dictionaryOfZetaZeroes = generateInfeasibleZetaZeroes(noOfZeroesOnCriticalAxisToGenerate)
-utils.putInJsonFile(dictionaryOfZetaZeroes, Constants.pathToInfeasibleZetaZeroes)
+    dictionaryOfZetaZeroes = generateInfeasibleZetaZeroes(noOfZeroesOnCriticalAxisToGenerate)
+    utils.putInJsonFile(dictionaryOfZetaZeroes, Constants.pathToInfeasibleZetaZeroes)
 
-dictionaryOfZetaZeroes = generateRandomZetaFunctionValuesWithRanges(CREATION_COUNT)
-utils.putInJsonFile(dictionaryOfZetaZeroes, Constants.pathToGeneralValues)
+    dictionaryOfZetaZeroes = generateRandomZetaFunctionValuesWithRanges(CREATION_COUNT)
+    utils.putInJsonFile(dictionaryOfZetaZeroes, Constants.pathToGeneralValues)
