@@ -91,10 +91,10 @@ def generateRandomZetaFunctionValuesWithRanges(CREATION_COUNT) -> dict[tuple[mpm
 
 if __name__ == "__main__":
     dictionaryOfZetaZeroes: dict = generateTheCriticalLineZeroes(noOfZeroesOnCriticalAxisToGenerate)
-    utils.putInJsonFile(dictionaryOfZetaZeroes, "./criticalZeroes.json")
+    utils.convertToFeedablePromptAndPutInJsonFile(dictionaryOfZetaZeroes, "./criticalZeroes.json")
 
     dictionaryOfZetaZeroes = generateInfeasibleZetaZeroes(noOfZeroesOnCriticalAxisToGenerate)
-    utils.putInJsonFile(dictionaryOfZetaZeroes, Constants.pathToInfeasibleZetaZeroes)
+    utils.convertToFeedablePromptAndPutInJsonFile(dictionaryOfZetaZeroes, Constants.pathToInfeasibleZetaZeroes)
 
     dictionaryOfZetaZeroes = generateRandomZetaFunctionValuesWithRanges(CREATION_COUNT)
-    utils.putInJsonFile(dictionaryOfZetaZeroes, Constants.pathToGeneralValues)
+    utils.convertToFeedablePromptAndPutInJsonFile(dictionaryOfZetaZeroes, Constants.pathToGeneralValues)

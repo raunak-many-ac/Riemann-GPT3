@@ -4,11 +4,26 @@ import random
 
 from src.constants import Constants
 
-def putInJsonFile(data: dict, filePath: str = "./dataset.json"):
+# Raw json to file
+def putInJsonRaw(data: dict, filePath: str):
     output_file = open(filePath, "w")
-    data = convertToFeedablePrompt(data)
     jsonData = json.dumps(data, indent=4)
     output_file.write(jsonData)
+
+def convertToSerialisableJsonAndPutInJsonFile(data: dict[mpmath.mpc, tuple[mpmath.mpc, mpmath.mpf, mpmath.mpf]], filePath: str):
+    serialisedDict: dict[str,str] = {}
+    for key in data:
+        inputToZeta = complexNumberToString(key)
+        inputToEta = f"({complexNumberToString(data[key][0])}, {complexNumberToString(data[key][1])}, {complexNumberToString(data[key][2])})"
+        serialisedDict[inputToZeta] = inputToEta
+
+    putInJsonRaw(serialisedDict, filePath)
+
+# convert a dictionary with key as prompt data (zetaValue, L, R) and value as inputValue to json
+# but it should be in the specific format as per the GPT-3 doc: https://beta.openai.com/docs/guides/fine-tuning/prepare-training-data
+def convertToFeedablePromptAndPutInJsonFile(data: dict[tuple[mpmath.mpc, mpmath.mpf, mpmath.mpf], mpmath.mpc], filePath: str = "./dataset.json"):
+    data = convertToFeedablePrompt(data)
+    putInJsonRaw(data, filePath)
 
 def keepMaxFiveDigitsAfterDecimal(decimalStr):
     fiveDigitsAfterDecimal = min(len(decimalStr),decimalStr.find(".") + 6)

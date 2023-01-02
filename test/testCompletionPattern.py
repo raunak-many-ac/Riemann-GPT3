@@ -17,7 +17,7 @@ def getRawCompletion(input: tuple, L: float, R: float) -> str:
 
 def checkWhetherItStartsWithADecimalNumber(response: str) -> bool:
     # check whether tthe first character of every response is " "
-    if response[0] != " " or not response[1].isdigit():
+    if response[0] != " " or not (response[1].isdigit() or response[1] == "-" or response[1] == "+"):
         return False
 
     i = 1
