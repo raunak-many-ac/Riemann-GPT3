@@ -7,6 +7,7 @@ import matplotlib.pyplot as plotter
 
 from src.constants import Constants
 
+## TODO: a function that generates no solution data points apart from critical region
 def generateNoSolutionDataPoints(dataPoints):
 
     pass

@@ -2,13 +2,24 @@ import json
 import mpmath
 import random
 
-from src.constants import Constants
+from src.constants import Constants, ExtractionConstants
 
 # Raw json to file
 def putInJsonRaw(data: dict, filePath: str):
     output_file = open(filePath, "w")
     jsonData = json.dumps(data, indent=4)
     output_file.write(jsonData)
+
+# this function takes inference results and serialises to be dumped in a file
+def serialiseInferenceResultsAndPutInFile(data: dict[tuple[mpmath.mpc, mpmath.mpf, mpmath.mpf], dict[str, mpmath.mpc]], filePath: str):
+    serialisedDict: dict[str,dict[str, str]] = {}
+    for key in data:
+        inputToEta = f"({complexNumberToString(key[0])}, {complexNumberToString(key[1])}, {complexNumberToString(key[2])})"
+        expectedInputToZeta = complexNumberToString(data[key][ExtractionConstants.expectedValue])
+        inferredInputToZeta = complexNumberToString(data[key][ExtractionConstants.inferredValue])
+        serialisedDict[inputToEta] = {ExtractionConstants.expectedValue: expectedInputToZeta, ExtractionConstants.inferredValue: inferredInputToZeta}
+
+    putInJsonRaw(serialisedDict, filePath)
 
 def convertToSerialisableJsonAndPutInJsonFile(data: dict[mpmath.mpc, tuple[mpmath.mpc, mpmath.mpf, mpmath.mpf]], filePath: str):
     serialisedDict: dict[str,str] = {}

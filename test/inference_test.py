@@ -4,17 +4,24 @@ import mpmath
 import openai
 import numpy
 import matplotlib.pyplot as plt
+import statistics
 
 from src.constants import ExtractionConstants, Constants
 import src.utils as utils
+import src.graphPlotter as graph
 from src.generateDataset import (
     generateRandomZetaFunctionValuesWithRanges,
     generateTheCriticalLineZeroes,
 )
 
-CREATION_COUNT = 1
-noOfZeroesOnCriticalAxisToGenerate = 1
+CREATION_COUNT = 900
+noOfZeroesOnCriticalAxisToGenerate = 100
 model = "davinci:ft-personal:zeta-testing-2022-11-26-15-45-02"
+inferrenceResultsDict: dict[tuple[mpmath.mpc, float, float], dict[str, mpmath.mpc]] = {}
+actualValues: list[mpmath.mpc] = []
+inferedValues: list[mpmath.mpc] = []
+# difference between expected and inferred values
+inferenceDiffs: list[mpmath.mpc] = []
 
 
 def getRawCompletion(input: str, L: float, R: float):
@@ -67,51 +74,103 @@ def extractCompletion(rawCompletion: str) -> tuple[str, str]:
     return (f"{realPartSign}{realPartStr}", f"{imaginaryPartSign}{imagPartStr}")
 
 
-dictionaryOfZetaZeroes: dict[
+# on generatedTestCases the GPT-3 instance is tested on accuracy
+def startInferenceTest(
+    generatedTestCases: dict[tuple[mpmath.mpc, float, float], mpmath.mpc]
+):
+    for key in generatedTestCases.keys():
+        output, L, R = key
+        actualValue = generatedTestCases[key]
+        responseStr = getRawCompletion(
+            utils.complexNumberToString(key[0]),
+            utils.keepMaxFiveDigitsAfterDecimal(f"{key[1]}"),
+            utils.keepMaxFiveDigitsAfterDecimal(f"{key[2]}"),
+        )
+        responseParts = extractCompletion(responseStr)
+        inferedValue = mpmath.mpc(float(responseParts[0]), float(responseParts[1]))
+        inferenceDiffs.append(actualValue - inferedValue)
+        actualValues.append(actualValue)
+        inferedValues.append(inferedValue)
+        inferrenceResultsDict[key] = {
+            ExtractionConstants.expectedValue: actualValue,
+            ExtractionConstants.inferredValue: inferedValue,
+        }
+
+
+# calculate stats on value diffs and store it in a file
+def statsOnDiffs(diffs: list[mpmath.mpf]) -> dict[str, float]:
+    n = len(diffs)
+    diffs.sort(key=lambda diff: diff)
+    minDeviation = diffs[0]
+    maxDeviation = diffs[n - 1]
+    # calculate average (i.e. mean)
+    median = statistics.median(diffs)
+    mean = sum(diffs) / n
+
+    noOfZeroesInDiffs = diffs.count(0)
+
+    accuracy = noOfZeroesInDiffs / n
+
+    jsonToDump = {
+        ExtractionConstants.mean: utils.keepMaxFiveDigitsAfterDecimal(f"{mean}"),
+        ExtractionConstants.median: utils.keepMaxFiveDigitsAfterDecimal(f"{median}"),
+        ExtractionConstants.accuracy: utils.keepMaxFiveDigitsAfterDecimal(
+            f"{accuracy*100}%"
+        ),
+        ExtractionConstants.minDiff: utils.keepMaxFiveDigitsAfterDecimal(
+            f"{minDeviation}"
+        ),
+        ExtractionConstants.maxDiff: utils.keepMaxFiveDigitsAfterDecimal(
+            f"{maxDeviation}"
+        ),
+    }
+
+    return jsonToDump
+
+
+generatedTestCases: dict[
     tuple[mpmath.mpc, float, float], mpmath.mpc
 ] = generateTheCriticalLineZeroes(noOfZeroesOnCriticalAxisToGenerate)
 
-dictionaryOfZetaZeroes.update(generateRandomZetaFunctionValuesWithRanges(2))
+generatedTestCases.update(generateRandomZetaFunctionValuesWithRanges(CREATION_COUNT))
 
-# dictionary dictionaryOfZetaZeroes has entries as tuple -> complexNumber
-# which is not serialisable to put in json file
-inverseDict = {}
-for key in dictionaryOfZetaZeroes:
-    inverseDict[dictionaryOfZetaZeroes[key]] = key
-utils.convertToSerialisableJsonAndPutInJsonFile(inverseDict, Constants.PATH_TO_22000_GENERATED_INFERENCE_INPUT)
+startInferenceTest(generatedTestCases)
 
-inferenceDiffs: list[mpmath.mpc] = []
-actualValues: list[mpmath.mpc] = []
-inferedValues: list[mpmath.mpc] = []
-for key in dictionaryOfZetaZeroes.keys():
-    output, L, R = key
-    value = dictionaryOfZetaZeroes[key]
-    responseStr = getRawCompletion(
-        utils.complexNumberToString(key[0]),
-        utils.keepMaxFiveDigitsAfterDecimal(f"{key[1]}"),
-        utils.keepMaxFiveDigitsAfterDecimal(f"{key[2]}"),
-    )
-    responseParts = extractCompletion(responseStr)
-    inferedValue = mpmath.mpc(float(responseParts[0]), float(responseParts[1]))
-    inferenceDiffs.append(value - inferedValue)
-    actualValues.append(value)
-    inferedValues.append(inferedValue)
+# dump the test results in a file
+utils.serialiseInferenceResultsAndPutInFile(
+    inferrenceResultsDict, Constants.PATH_TO_22000_INFERENCE_TEST_RESULT
+)
 
-xpoints = numpy.array([ v.real for v in actualValues])
-ypoints = numpy.array([ v.imag for v in actualValues])
-plt.plot(xpoints, ypoints, color='blue', marker=".", markersize=10)
+# statistics on the inferenceDiffs
+realPartSortedDiffs: mpmath.mpf = [abs(diff.real) for diff in inferenceDiffs]
+imagPartSortedDiffs: mpmath.mpf = [abs(diff.imag) for diff in inferenceDiffs]
 
-xpoints = numpy.array([ v.real for v in inferedValues])
-ypoints = numpy.array([ v.imag for v in inferedValues])
-plt.plot(xpoints, ypoints, color='green', marker=".", markersize=10)
+realPartStats = statsOnDiffs(realPartSortedDiffs)
+imagPartStats = statsOnDiffs(imagPartSortedDiffs)
 
-plt.figure()
-xpoints = numpy.array([ actualValues[i].real -  inferedValues[i].real for i in range(0, len(actualValues))])
-ypoints = numpy.array([ actualValues[i].imag -  inferedValues[i].imag for i in range(0, len(actualValues))])
-plt.plot(xpoints, ypoints, color='green', marker=".", markersize=10)
+stats = {}
+stats[ExtractionConstants.realPartStats] = realPartStats
+stats[ExtractionConstants.imagPartStats] = imagPartStats
+utils.putInJsonRaw(stats, filePath=Constants.PATH_TO_INFERRENCE_STATS)
 
-plt.show()
+graph.plotTheseNew(
+    xOfCurves=[
+        numpy.array([v.real for v in actualValues]),
+        numpy.array([v.real for v in inferedValues]),
+    ],
+    yOfCurves=[
+        numpy.array([v.imag for v in actualValues]),
+        numpy.array([v.imag for v in inferedValues]),
+    ],
+    titleOfPlot="Expected curve and Inferred curve",
+    nameOfCurves=["Expected", "Inferred"],
+    coloursOfCurves=["blue", "green"],
+)
 
-# put inferrence diffs in a json file
-
-# find mean, median and accuracy percentage inference Diffs
+# plot a different graph on difference between actual and inferred values
+graph.plotTheseNew(
+    xpoints=[numpy.array([diff.real for diff in inferenceDiffs])],
+    ypoints=[numpy.array([diff.imag for diff in inferenceDiffs])],
+    titleOfPlot="Difference between expected and inferred",
+    coloursOfCurves=["red"]
+)

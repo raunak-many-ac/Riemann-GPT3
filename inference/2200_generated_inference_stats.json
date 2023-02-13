@@ -1,0 +1,16 @@
+{
+    "Real Part Stats": {
+        "MEAN": "0.02766",
+        "MEDIAN": "0.0",
+        "accuracy": "0.75",
+        "MIN_DIFF": "0.0",
+        "MAX_DIFF": "0.11067"
+    },
+    "Imaginary Part Stats": {
+        "MEAN": "315432.68431",
+        "MEDIAN": "246312.16930",
+        "accuracy": "0.0",
+        "MIN_DIFF": "210410.28732",
+        "MAX_DIFF": "558696.11132"
+    }
+}
