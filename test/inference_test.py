@@ -14,8 +14,8 @@ from src.generateDataset import (
     generateTheCriticalLineZeroes,
 )
 
-CREATION_COUNT = 900
-noOfZeroesOnCriticalAxisToGenerate = 100
+CREATION_COUNT = 90
+noOfZeroesOnCriticalAxisToGenerate = 10
 model = "davinci:ft-personal:zeta-testing-2022-11-26-15-45-02"
 inferrenceResultsDict: dict[tuple[mpmath.mpc, float, float], dict[str, mpmath.mpc]] = {}
 actualValues: list[mpmath.mpc] = []
@@ -115,7 +115,7 @@ def statsOnDiffs(diffs: list[mpmath.mpf]) -> dict[str, float]:
         ExtractionConstants.mean: utils.keepMaxFiveDigitsAfterDecimal(f"{mean}"),
         ExtractionConstants.median: utils.keepMaxFiveDigitsAfterDecimal(f"{median}"),
         ExtractionConstants.accuracy: utils.keepMaxFiveDigitsAfterDecimal(
-            f"{accuracy*100}%"
+            f"{accuracy*100}"
         ),
         ExtractionConstants.minDiff: utils.keepMaxFiveDigitsAfterDecimal(
             f"{minDeviation}"
@@ -153,7 +153,9 @@ stats[ExtractionConstants.realPartStats] = realPartStats
 stats[ExtractionConstants.imagPartStats] = imagPartStats
 utils.putInJsonRaw(stats, filePath=Constants.PATH_TO_INFERRENCE_STATS)
 
-graph.plotTheseNew(
+
+# From here all the graph data is shown for visualisation
+plt = graph.plotTheseNew(
     xOfCurves=[
         numpy.array([v.real for v in actualValues]),
         numpy.array([v.real for v in inferedValues]),
@@ -165,12 +167,17 @@ graph.plotTheseNew(
     titleOfPlot="Expected curve and Inferred curve",
     nameOfCurves=["Expected", "Inferred"],
     coloursOfCurves=["blue", "green"],
+    plt=plt
 )
 
 # plot a different graph on difference between actual and inferred values
-graph.plotTheseNew(
-    xpoints=[numpy.array([diff.real for diff in inferenceDiffs])],
-    ypoints=[numpy.array([diff.imag for diff in inferenceDiffs])],
+plt = graph.plotTheseNew(
+    xOfCurves=[numpy.array([diff.real for diff in inferenceDiffs])],
+    yOfCurves=[numpy.array([diff.imag for diff in inferenceDiffs])],
     titleOfPlot="Difference between expected and inferred",
-    coloursOfCurves=["red"]
+    coloursOfCurves=["red"],
+    plt=plt
 )
+
+plt.show(block=True)
+

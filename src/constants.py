@@ -19,7 +19,7 @@ class ExtractionConstants:
     maxDiff = "MAX_DIFF"
     mean = "MEAN"
     median = "MEDIAN"
-    accuracy = "accuracy"
+    accuracy = "accuracyInPercent"
     statsAbout = "Stats about"
     inferrenceDiffs = "INFERRENCE_DIFFS"
     realPartStats = "Real Part Stats"

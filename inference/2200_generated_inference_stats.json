@@ -1,16 +1,16 @@
 {
     "Real Part Stats": {
-        "MEAN": "0.02766",
-        "MEDIAN": "0.0",
-        "accuracy": "0.75",
+        "MEAN": "0.09802",
+        "MEDIAN": "0.05710",
+        "accuracyInPercent": "24.0",
         "MIN_DIFF": "0.0",
-        "MAX_DIFF": "0.11067"
+        "MAX_DIFF": "0.74610"
     },
     "Imaginary Part Stats": {
-        "MEAN": "315432.68431",
-        "MEDIAN": "246312.16930",
-        "accuracy": "0.0",
-        "MIN_DIFF": "210410.28732",
-        "MAX_DIFF": "558696.11132"
+        "MEAN": "294895.62442",
+        "MEDIAN": "214920.51061",
+        "accuracyInPercent": "0.0",
+        "MIN_DIFF": "332.79690",
+        "MAX_DIFF": "1337019.77550"
     }
 }
