@@ -8,6 +8,13 @@
       // "console": "externalTerminal"
     },
     {
+      "name": "trainer: Run",
+      "type": "python",
+      "request": "launch",
+      "program": "src/trainer.py",
+      // "console": "externalTerminal"
+    },
+    {
       "name": "Utils: Run",
       "type": "python",
       "request": "launch",

@@ -6,8 +6,8 @@
 
 import mpmath
 import random
-from src.constants import Constants
-import src.utils as utils
+from constants import Constants
+import utils as utils
 
 
 # mpmath.mp.prec = 53
@@ -67,7 +67,7 @@ def generateInfeasibleZetaZeroes(noOfZeroesOnCriticalAxisToGenerate):
         low: float = random.randrange(start=2, stop=1000)
         high: float = random.randrange(start=2, stop=1000)
         zetaValue = mpmath.mpc(0, 0)
-        prompts[(zetaValue, low, high)] = "No Solution"
+        prompts[(zetaValue, low, high)] = Constants.noSolution
         dictionaryOfZetaZeroes.update(prompts)
     
     return dictionaryOfZetaZeroes

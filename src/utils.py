@@ -2,7 +2,7 @@ import json
 import mpmath
 import random
 
-from src.constants import Constants, ExtractionConstants
+from constants import Constants, ExtractionConstants
 
 # Raw json to file
 def putInJsonRaw(data: dict, filePath: str):

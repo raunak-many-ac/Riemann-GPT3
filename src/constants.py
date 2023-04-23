@@ -3,6 +3,7 @@ class Constants:
     pathToInfeasibleZetaZeroes = "./infeasibleZetaZeroes.json"
     pathToCriticalZeroes = "./criticalZeroes.json"
     pathToGeneralValues = "./generalValues.json"
+    noSolution = "No Solution"
     class PreviousDatasets:
         pathTo_22000_dataPoints = "./fine_tune/22000_fine_tune/dataset.json"
     INFINITE = 999999
@@ -26,3 +27,4 @@ class ExtractionConstants:
     inferrenceDiffs = "INFERRENCE_DIFFS"
     realPartStats = "Real Part Stats"
     imagPartStats = "Imaginary Part Stats"
+    completion = "completion"
