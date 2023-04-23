@@ -41,6 +41,8 @@ def keepMaxFiveDigitsAfterDecimal(decimalStr):
     decimalStr = decimalStr[:fiveDigitsAfterDecimal]
     return decimalStr
 
+# will convert complex number to string input i.e. 
+# mpmath.mpc(1.10211, +0.02171) --> str("1.10211 + i0.02171")
 def complexNumberToString(complexNumber: mpmath.mpc) -> str:
     if isinstance(complexNumber, str):
         return complexNumber
@@ -55,6 +57,8 @@ def complexNumberToString(complexNumber: mpmath.mpc) -> str:
 
     return f"{realPartAsString} {'+' if imagPart >= 0 else '-'} i{imagPartAsString}"
 
+# will convert string input to complex i.e. 
+# str("1.10211 + i0.02171") --> mpmath.mpc(1.10211, +0.02171)
 def stringToComplexNumber(stringNumber: str) -> mpmath.mpc:
     splittedNumbers = stringNumber.split(" ")
     realPart = splittedNumbers[0]
@@ -79,12 +83,16 @@ def convertToFeedablePrompt(data: dict):
         feedablePromptDict.append(promptDict)
     return feedablePromptDict
 
+def getInputJsonListFromFile(filePath: str) -> list[dict]:
+    jsonFile = open(filePath)
+    jsonList: list = json.load(jsonFile)
+    return jsonList
+
 def mergeTwoJsonsAndShuffle(jsonPaths: list, mergedJsonPath: str = "./dataset.json"):
     mergedJsons: list = []
 
     for jsonPath in jsonPaths:
-        jsonFile = open(jsonPath)
-        jsonList: list = json.load(jsonFile)
+        jsonList: list = getInputJsonListFromFile(jsonPath)
         mergedJsons.extend(jsonList)
     random.shuffle(mergedJsons)
 

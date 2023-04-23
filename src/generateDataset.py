@@ -9,8 +9,7 @@ import random
 from src.constants import Constants
 import src.utils as utils
 
-CREATION_COUNT = 20000
-noOfZeroesOnCriticalAxisToGenerate = 1000
+
 # mpmath.mp.prec = 53
 mpmath.mp.dps = 30 # total 30 digits of number it will be
 # mpmath.mp.pretty = True
@@ -38,7 +37,7 @@ def generateInputPrompts(outputValue: mpmath.mpc, inputValue: mpmath.mpc, alsoGe
     # if alsoGenerateOutOfBoundaryNoSolution is True:
     #     prompts[(zetaValue, real - random.random(), real)] = "No Solution"
     #     prompts[(zetaValue, real, real + random.random())] = "No Solution"
-        
+    
     return prompts
 
 def generateTheCriticalLineZeroes(noOfZeroesOnCriticalAxisToGenerate) -> dict[tuple[mpmath.mpc, float, float], mpmath.mpc]:
@@ -88,13 +87,3 @@ def generateRandomZetaFunctionValuesWithRanges(CREATION_COUNT) -> dict[tuple[mpm
         prompts: dict = generateInputPrompts(outputValue=mpmath.mpmathify(zetaValue), inputValue=mpmath.mpmathify(random_input))
         dictionaryOfZetaZeroes.update(prompts)
     return dictionaryOfZetaZeroes
-
-if __name__ == "__main__":
-    dictionaryOfZetaZeroes: dict = generateTheCriticalLineZeroes(noOfZeroesOnCriticalAxisToGenerate)
-    utils.convertToFeedablePromptAndPutInJsonFile(dictionaryOfZetaZeroes, "./criticalZeroes.json")
-
-    dictionaryOfZetaZeroes = generateInfeasibleZetaZeroes(noOfZeroesOnCriticalAxisToGenerate)
-    utils.convertToFeedablePromptAndPutInJsonFile(dictionaryOfZetaZeroes, Constants.pathToInfeasibleZetaZeroes)
-
-    dictionaryOfZetaZeroes = generateRandomZetaFunctionValuesWithRanges(CREATION_COUNT)
-    utils.convertToFeedablePromptAndPutInJsonFile(dictionaryOfZetaZeroes, Constants.pathToGeneralValues)

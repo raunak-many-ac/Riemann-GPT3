@@ -3,6 +3,8 @@ class Constants:
     pathToInfeasibleZetaZeroes = "./infeasibleZetaZeroes.json"
     pathToCriticalZeroes = "./criticalZeroes.json"
     pathToGeneralValues = "./generalValues.json"
+    class PreviousDatasets:
+        pathTo_22000_dataPoints = "./fine_tune/22000_fine_tune/dataset.json"
     INFINITE = 999999
     NEGATIVE_INFINITE = -INFINITE - 1
     PATH_TO_22000_INFERENCE_TEST_RESULT = "./inference/2200_inference_test.json"
